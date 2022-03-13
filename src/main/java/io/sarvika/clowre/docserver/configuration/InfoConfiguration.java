@@ -1,10 +1,12 @@
 package io.sarvika.clowre.docserver.configuration;
 
 import io.micronaut.context.annotation.ConfigurationProperties;
+import io.micronaut.core.annotation.Introspected;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.constraints.NotEmpty;
 
+@Introspected
 @ConfigurationProperties(value = "swagger.info")
 public class InfoConfiguration {
 

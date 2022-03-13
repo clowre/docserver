@@ -1,7 +1,12 @@
 package io.sarvika.clowre.docserver.configuration;
 
+import io.micronaut.context.annotation.EachProperty;
+import io.micronaut.core.annotation.Introspected;
+
 import javax.validation.constraints.NotEmpty;
 
+@Introspected
+@EachProperty("swagger.sources")
 public class SwaggerSource {
 
     @NotEmpty
