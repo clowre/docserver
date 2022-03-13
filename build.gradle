@@ -42,3 +42,7 @@ micronaut {
         annotations("io.sarvika.clowre.*")
     }
 }
+
+tasks.named("dockerBuild") {
+    images = ["clowre/docserver"]
+}
