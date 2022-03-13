@@ -42,5 +42,3 @@ micronaut {
         annotations("io.sarvika.clowre.*")
     }
 }
-
-
