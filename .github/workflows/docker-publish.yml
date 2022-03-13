@@ -21,7 +21,7 @@ jobs:
       - name: Build Docker Image
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: clean build dockerfile -x test
+          arguments: clean dockerbuild
 
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
