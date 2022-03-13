@@ -12,5 +12,3 @@ out/
 .settings
 .classpath
 .factorypath
-
-gradlew*
