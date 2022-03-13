@@ -1,0 +1,16 @@
+micronaut:
+  config-client:
+    enabled: true
+  application:
+    name: clowre-docserver
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+spring:
+  cloud:
+    config:
+      enabled: true
+      uri: ${CONFIG_SERVER_URI}
+

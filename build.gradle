@@ -19,6 +19,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.views:micronaut-views-thymeleaf")
+    implementation("io.micronaut.discovery:micronaut-discovery-client")
 
     implementation("io.swagger.parser.v3:swagger-parser:2.0.30")
 }
