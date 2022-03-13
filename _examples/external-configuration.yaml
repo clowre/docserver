@@ -1,0 +1,27 @@
+micronaut:
+  config-client:
+    enabled: false
+
+swagger:
+  info:
+    title: A basic combined API YAML
+    description: |-
+      ### What it is
+      An example of clowre/docserver's schema merge functionality.
+
+      ### What it merges
+      - Swagger PetStore
+      - BoxKnight APIs
+  sources:
+    - name: Pet Store
+      path-prefix: pet-store
+      address: https://redocly.github.io/redoc/openapi.yaml
+      version: V3
+    - name: BoxKnight API
+      path-prefix: boxknight
+      address: https://raw.githubusercontent.com/hasan-ahmed/boxknight-api-docs/master/swagger.yaml
+      version: V2
+
+views:
+  enable-redoc: true
+  enable-swagger: true
