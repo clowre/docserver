@@ -7,7 +7,6 @@ import io.sarvika.clowre.docserver.ViewNotEnabledException;
 import io.sarvika.clowre.docserver.configuration.InfoConfiguration;
 import io.sarvika.clowre.docserver.configuration.ViewConfiguration;
 import jakarta.inject.Inject;
-import org.apache.commons.lang3.StringUtils;
 
 @Controller("/views")
 public class ViewsController {
@@ -22,6 +21,16 @@ public class ViewsController {
     @View("redoc")
     ViewModel renderRedocView() {
         if (!viewConfiguration.isEnableRedoc()) {
+            throw new ViewNotEnabledException();
+        }
+
+        return vm();
+    }
+
+    @Get("/swagger")
+    @View("swagger")
+    ViewModel renderSwaggerView() {
+        if (!viewConfiguration.isEnableSwagger()) {
             throw new ViewNotEnabledException();
         }
 
