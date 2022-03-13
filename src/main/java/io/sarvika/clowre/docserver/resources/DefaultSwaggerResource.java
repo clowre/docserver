@@ -17,58 +17,62 @@ import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.parser.OpenAPIV3Parser;
 import io.swagger.v3.parser.core.models.ParseOptions;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import joptsimple.internal.Strings;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Singleton
-public class ConsolidatedSwaggerResource implements SwaggerResource {
+class DefaultSwaggerResource implements SwaggerResource {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConsolidatedSwaggerResource.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultSwaggerResource.class);
     private static final Object lock = new Object();
 
-    @Inject
-    private SwaggerSourcesConfiguration sourcesConfiguration;
+    private final SwaggerSourcesConfiguration sourcesConfiguration;
 
-    @Inject
-    private InfoConfiguration infoConfiguration;
+    private OpenAPI openAPI;
 
-    private Date nextReadAfter;
-    private OpenAPI openAPI = new OpenAPI();
+    public DefaultSwaggerResource(SwaggerSourcesConfiguration sourcesConfiguration, InfoConfiguration infoConfiguration) {
+        this.sourcesConfiguration = sourcesConfiguration;
+
+        logger.info("scheduling document updates every " + sourcesConfiguration.getRefreshDelay() + " seconds");
+        final ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
+        exec.scheduleAtFixedRate(() -> {
+            final var openAPI = mergeSchemas();
+            if (openAPI != null) {
+
+                openAPI.setInfo(
+                        new Info()
+                                .title(infoConfiguration.getTitle())
+                                .description(infoConfiguration.getDescription())
+                                .version(infoConfiguration.getVersion())
+                );
+
+                synchronized (lock) {
+                    this.openAPI = openAPI;
+                }
+            }
+        }, 0, sourcesConfiguration.getRefreshDelay(), TimeUnit.SECONDS);
+    }
 
     @Override
-    public OpenAPI read() {
-
-        if (this.readTimeElapsed()) {
-            this.readFromSource();
-        }
-
+    public synchronized OpenAPI read() {
         return openAPI;
     }
 
-    private boolean readTimeElapsed() {
-        if (this.nextReadAfter == null) {
-            return true;
-        }
-
-        return new Date().after(this.nextReadAfter);
-    }
-
-    private void readFromSource() {
-
+    private OpenAPI mergeSchemas() {
         final var parseOptions = new ParseOptions();
         parseOptions.setResolveFully(true);
 
         OpenAPI openAPI = null;
         for (final var source : sourcesConfiguration.getSources()) {
-            logger.debug("preparing to read source \"" + source.getName() + "\" from " + source.getAddress());
+            logger.info("preparing to read source \"" + source.getName() + "\" from " + source.getAddress());
 
             SwaggerParseResult parseResult;
             switch (source.getVersion()) {
@@ -96,23 +100,7 @@ public class ConsolidatedSwaggerResource implements SwaggerResource {
             openAPI = this.mergeParseResult(source, parseResult, openAPI);
         }
 
-        if (openAPI != null) {
-
-            openAPI.setInfo(
-                    new Info()
-                            .title(infoConfiguration.getTitle())
-                            .description(infoConfiguration.getDescription())
-                            .version(infoConfiguration.getVersion())
-            );
-
-            synchronized (lock) {
-                this.openAPI = openAPI;
-
-                final var ci = Calendar.getInstance();
-                ci.add(Calendar.MINUTE, 5);
-                this.nextReadAfter = ci.getTime();
-            }
-        }
+        return openAPI;
     }
 
     private OpenAPI mergeParseResult(SwaggerSource source, SwaggerParseResult parseResult, OpenAPI dest) {
@@ -167,7 +155,6 @@ public class ConsolidatedSwaggerResource implements SwaggerResource {
         if (components.getCallbacks() != null) {
             components.getCallbacks().forEach(dest.getComponents()::addCallbacks);
         }
-
     }
 
     private void updatePathItem(SwaggerSource source, PathItem pi) {
