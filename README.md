@@ -17,7 +17,7 @@ micronaut:
 ```
 
 The recommended way to run this server is through Docker. This server serves merged OpenAPI Schemas at
-`http://host:port/docs.json` and `http://host:port/docs.yaml`.
+`http://host:port/docs.json`.
 
 ### With external configuration
 
