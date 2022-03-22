@@ -1,14 +1,13 @@
 package io.sarvika.clowre.docserver.resources;
 
-import io.sarvika.clowre.docserver.configuration.InfoConfiguration;
 import io.sarvika.clowre.docserver.configuration.SwaggerSource;
 import io.sarvika.clowre.docserver.configuration.SwaggerSourcesConfiguration;
+import io.sarvika.clowre.docserver.configuration.oas.InfoConfiguration;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.Paths;
-import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.Schema;
@@ -47,12 +46,7 @@ class DefaultSwaggerResource implements SwaggerResource {
             final var openAPI = mergeSchemas();
             if (openAPI != null) {
 
-                openAPI.setInfo(
-                        new Info()
-                                .title(infoConfiguration.getTitle())
-                                .description(infoConfiguration.getDescription())
-                                .version(infoConfiguration.getVersion())
-                );
+                openAPI.setInfo(infoConfiguration);
 
                 synchronized (lock) {
                     this.openAPI = openAPI;

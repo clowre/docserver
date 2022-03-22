@@ -4,8 +4,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.views.View;
 import io.sarvika.clowre.docserver.ViewNotEnabledException;
-import io.sarvika.clowre.docserver.configuration.InfoConfiguration;
 import io.sarvika.clowre.docserver.configuration.ViewConfiguration;
+import io.sarvika.clowre.docserver.configuration.oas.InfoConfiguration;
 import jakarta.inject.Inject;
 
 @Controller("/views")

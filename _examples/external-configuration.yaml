@@ -4,10 +4,16 @@ micronaut:
 
 swagger:
   info:
+    contact:
+      email: me@acme.org
+    license:
+      name: MIT
+      url: https://opensource.org/licenses/MIT
+    version: 2.0
     title: A basic combined API YAML
     description: |-
       ### What it is
-      An example of clowre/docserver's schema merge functionality.
+      An example of [clowre/docserver](https://github.com/clowre/docserver)'s schema merge functionality.
 
       ### What it merges
       - Swagger PetStore
