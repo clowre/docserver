@@ -51,6 +51,10 @@ couple of schemas.
 
 ```yaml
 swagger:
+  ## Will be used to generate the merged OpenAPI file's 'servers' section - optional.
+  servers:
+    - url: http://myserver.local
+      description: A really cool server that does stuff.
   ## Will be used to generate the merged OpenAPI file's 'info' section.
   info:
     ## Title of the merged OpenAPI schema. Required.

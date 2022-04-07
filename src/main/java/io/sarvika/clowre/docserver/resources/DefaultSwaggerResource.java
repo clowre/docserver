@@ -47,6 +47,10 @@ class DefaultSwaggerResource implements SwaggerResource {
             if (openAPI != null) {
 
                 openAPI.setInfo(infoConfiguration);
+                final var servers = sourcesConfiguration.getServers();
+                if (servers != null && !servers.isEmpty()) {
+                    servers.forEach(openAPI::addServersItem);
+                }
 
                 synchronized (lock) {
                     this.openAPI = openAPI;

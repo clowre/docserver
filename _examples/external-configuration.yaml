@@ -3,6 +3,9 @@ micronaut:
     enabled: false
 
 swagger:
+  servers:
+    - url: http://myserver.local
+      description: A cool server
   info:
     contact:
       email: me@acme.org
