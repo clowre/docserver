@@ -45,14 +45,16 @@ micronaut {
     }
 }
 
+def releaseVersion = System.getenv("RELEASE_VERSION")
+
 tasks.named("dockerBuild") {
     images = [
         "clowre/docserver"
     ]
 
-    if (!System.getenv("RELEASE_VERSION")?.isEmpty()) {
-        logger.lifecycle "Adding release tag to docker builds"
-        images.add("clowre/docserver:${System.getenv("RELEASE_VERSION")}")
+    if (releaseVersion != null && !releaseVersion.trim().isEmpty()) {
+        logger.lifecycle "Adding release tag '${releaseVersion}' to docker builds"
+        images.add("clowre/docserver:${releaseVersion}")
     }
 }
 
