@@ -21,16 +21,12 @@ jobs:
           java-version: '17'
           distribution: adopt
 
-      - name: Build Docker Image
-        run: |-
-          ./gradlew clean dockerbuild
-          docker tag clowre/docserver clowre/docserver:$RELEASE_VERSION
-
       - name: Log in to Docker Hub
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Push docker image
-        run: docker push clowre/docserver:$RELEASE_VERSION
+      - name: Build Docker Image
+        run: |-
+          ./gradlew clean dockerpush
